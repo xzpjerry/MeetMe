@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html lang="en"> <head>
+<title>Appointments</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css"
+     href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css"
+/>
+
+
+<link rel="stylesheet" type="text/css"
+    href="/static/css/busy.css"
+/>
+
+<!-- jquery from a content distribution network; probably cached -->
+<script type="text/javascript"
+     src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+function confirm_alert(node) {
+    return confirm("By clicking OK, you are going to allow us to check your busy time period in your google calendar(only busy event's start time and end time).");
+}
+</script>
+
+</head>
+
+<body>
+<div class="container">
+
+<div class="parent-container">
+<div class="child-container">
+    <h1>Let's meet!</h1>
+        <a href="/inviter" class="btn btn-primary">I'm the meeting arranger!</a>
+        <a href="/invitee" class="btn btn-primary" onclick="return confirm_alert(this);">I'm the meeting member!</a>
+</div>
+</div>
+
+
+</div>  <!-- container (for bootstrap) -->
+</body> 
+</html>

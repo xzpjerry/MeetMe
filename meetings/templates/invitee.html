@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html lang="en"> <head>
+<title>Appointments</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css"
+     href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css"
+/>
+
+
+<link rel="stylesheet" type="text/css"
+    href="/static/css/busy.css"
+/>
+
+<!-- jquery from a content distribution network; probably cached -->
+<script type="text/javascript"
+     src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+
+<!-- Ideally the rest of our javascript dependencies would be
+     bundled and minified with 'browserify', but I've found that
+     it difficult to handle browserify dependencies for class
+     projects.  So, we'll pick up moment and a date range picker
+     from CDNs instead.
+-->
+
+
+</head>
+
+<body>
+<div class="container">
+<div id="notification" style="display: none;">
+  <span class="dismiss"><a title="dismiss this notification">x</a></span>
+</div>
+
+<h2>Date range</h2>
+  <p>From {{ g.begin_date }} to {{ g.end_date }}</p>
+
+<div><h4>Time range</h4></div>
+  <p>From {{ g.begin_hour }}:{{ g.begin_minute }} to {{ g.end_hour }}:{{ g.end_minute }} </p>
+
+<div><h4>Meeting duration</h4></div>
+  <p>About {{ g.duration }} minutes.</p>
+
+<div><h4>I am:<input type="text" id="user_id" name="user_id" value={{ g.userid }}></h4></div> 
+
+
+
+{% if g.calendars is defined  %}
+  <div class="row">
+  {% for cal in g.calendars %}
+          <div class="col-md-4">
+          <input type="checkbox" name="cal_selected" checked>
+          <label for="cal_selected" hidden>{{ cal.id }}</label>
+	   {{ cal.summary }}
+          </div>
+         {% if loop.index is divisibleby 3 %}
+          </div> <div class="row">
+         {% endif %}
+  {% endfor %}
+  </div>
+{% endif %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#user_id").keyup(function(event){
+      var txt = $("#user_id").val();  // Current content of the input field
+      if (txt.length === 0) { return } // Save reasources
+
+      var keycode = event.which;      // They key that just went up
+      var letter = String.fromCharCode(keycode);
+      if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
+
+      $.getJSON("/_updateUserName", {text: txt}, function(data){
+        rslt = data.result.result
+        if (rslt === true) {
+          $("#user_id").value = {{ g.userid }}
+        } else {
+          alert("Please change another name.")
+        }
+      })
+
+    })
+
+    $("input[name='cal_selected']").on('change', function(){
+      var result = {}
+      $("input[name='cal_selected']").each(function(){
+        var myself = this
+        var checked = this.checked
+        var id = $(this).next('label').text()
+        result[id] = checked
+        console.log(result)
+      }).promise().done(
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url:'_updateSelectedCal',
+        dataType:'json',
+        data:JSON.stringify(result),
+        error: function(result) {console.log(result)}
+    }))
+    alert("Change updated!")
+  })
+  })
+</script>
+  </div>  <!-- container (for bootstrap) -->
+  </body> </html>
+
+  
