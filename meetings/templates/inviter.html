@@ -36,6 +36,7 @@
 <div class="container">
 
 <h1>Free times</h1>
+<p id="free_times"></p>
 
 <!--
   -- If there are any warnings or other messages from a prior action,
@@ -47,13 +48,16 @@
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}
+      {% autoescape false %}
       <li>{{ message }}</li>
+      {% endautoescape %}
     {% endfor %}
     </ul>
   {% endif %}
 {% endwith %}
 
 <h2>Date range</h2>
+
   <form action="/setrange" method="post">
   <input type="text" name="daterange" size="12"
     {% if session.daterange is defined %}
@@ -69,14 +73,11 @@
   <div><h4>Meeting duration</h4></div>
   <div id="duration_input" name="duration_input"></div>
 
-  <br /><input type="submit" value="Set another meeting time"/>
+  <br /><input type="submit" name="submitbtn" value="Set another meeting time" onclick="return confirm('By clicking OK, you are going to create a new meeting and thus all existing member\'s data will be lost.');" />
 
   <script type="text/javascript">
+
   $(function() {
-    
-    function confirm_alert(node) {
-      return confirm("By clicking OK, you are going to delete all existed users' data.");
-    }
 
     function load_time_min_input(hh1, min1, hh2, min2) {
       $("#time_input").html("<input type=number name=\"time_input\" id=\"hour1\" value=" + hh1 + " min=\"0\" max=\"23\"  />");
@@ -87,7 +88,7 @@
       $("#time_input").append(":");
       $("#time_input").append("<input type=number name=\"time_input\" id=\"min2\" value=" + min1 + " min=\"0\" max=\"59\"  />");
 
-      $("#duration_input").html("<input type=\"number\" name=\"duration_input\" id=\"duration_input\" value=\"30\" min=\"0\" max=\"59\"  /> minute(s)");
+      $("#duration_input").html("<input type=\"number\" name=\"duration_input\" id=\"duration_input\" value=" + duration + " min=\"0\" /> minute(s)");
     }
 
     function update_time_range() 
@@ -116,6 +117,7 @@
     var min1 = {{ g.begin_minute }}
     var hh2 = {{ g.end_hour }}
     var min2 = {{ g.end_minute }}
+    var duration = {{ g.duration }}
 
     load_time_min_input(hh1, min1, hh2, min2)
     update_time_range()
@@ -163,7 +165,11 @@
   <div class="row">
   {% for user in g.users %}
           <div class="col-md-4">
+          {% if user in session['Checked_users'] %}
+          <input type="checkbox" name="User_selected" checked>
+          {% else %}
           <input type="checkbox" name="User_selected">
+          {% endif %}
           <label for="User_selected" hidden>{{ user }}</label>
 	   {{ user }}
           </div>
@@ -192,7 +198,8 @@
         url:'_updateSelectedUsers',
         dataType:'json',
         data:JSON.stringify(result),
-        error: function(result) {console.log(result)}
+        error: function(result) {console.log(result)},
+        success: function(data) {location.reload(true)}
     }))
   })
   })

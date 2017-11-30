@@ -34,7 +34,7 @@ class calendar_event(object):
     def __str__(self):
         result = "(Start: %s    " % self.start
         result += "End: %s    " % self.end
-        result += "Duration: %ss, from %s to %s    );" % (
+        result += "Duration: %ss, from %s to %s)<br>" % (
             self.duration, self.start_time.format("HH:mm:ss"), self.end_time.format("HH:mm:ss"))
         return result
 
@@ -60,12 +60,12 @@ class eventrange(calendar_event):
 
     def __str__(self):
         result = super(eventrange, self).__str__()
-        result += "Blockage in Range: "
+        result += "<br><li>Blockage in Range:<li>"
         if self.blockage:
             for block in self.blockage:
                 result += " "
                 result += str(block)
-            result += "\nFree time:"
+            result += "<br><li>Free time:</li>"
             if self.free:
                 for freetime in self.free:
                     result += str(arrow.get(freetime[0]).to('local'))
@@ -138,13 +138,14 @@ class DB_config:
 class record:
 
     def __init__(self, start = None, end = None, adict = None, duration = 30): # Inputed date will always be in unix timestamp format
+        self.duration = duration
         if start != None and end != None:
             self.start = start
             self.end = end
         elif adict != None:
             self.start = adict["start"]
             self.end = adict["end"]
-        self.duration = duration
+            self.duration = adict["duration"]
     def formatted(self):
         temp = {"type": "calendar_event",
                 "start": self.start,
