@@ -74,6 +74,7 @@
   <div id="duration_input" name="duration_input"></div>
 
   <br /><input type="submit" name="submitbtn" value="Set another meeting time" onclick="return confirm('By clicking OK, you are going to create a new meeting and thus all existing member\'s data will be lost.');" />
+  <a href="mailto:?subject=We gonna have a meeting! &body=Hi, let's arrange a meeting date at http://127.0.0.1/invitee">tell your partner!</a>
 
   <script type="text/javascript">
 
@@ -160,7 +161,7 @@
 
 
 <h1>Participant(s)</h1>
-
+<button class="button3" id="check_all">(De)Select_all</button>
 {% if g.users is defined  %}
   <div class="row">
   {% for user in g.users %}
@@ -202,6 +203,15 @@
         success: function(data) {location.reload(true)}
     }))
   })
+
+    $("#check_all").click(
+      function(){
+        if($('input[name="User_selected"]').length == $('input[name="User_selected"]:checked').length) {
+          $('input[name="User_selected"]').prop('checked', false).change();  
+        } else {
+          $('input[name="User_selected"]').prop('checked', true).change();
+        }
+      })
   })
 </script>
   </div>  <!-- container (for bootstrap) -->

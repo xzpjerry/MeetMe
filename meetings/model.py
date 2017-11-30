@@ -59,12 +59,9 @@ class eventrange(calendar_event):
         self.meet_duration = meet_duration * 60
 
     def __str__(self):
-        result = super(eventrange, self).__str__()
-        result += "<br><li>Blockage in Range:<li>"
+        result = "Range:"
+        result += super(eventrange, self).__str__()
         if self.blockage:
-            for block in self.blockage:
-                result += " "
-                result += str(block)
             result += "<br><li>Free time:</li>"
             if self.free:
                 for freetime in self.free:
@@ -73,9 +70,15 @@ class eventrange(calendar_event):
                     result += str(arrow.get(freetime[1]).to('local'))
                     result += " ; "
             else:
-                result += "None."
+                result += "None.<br>"
+
+            result += "<br><li>Blockage in Range:</li>"
+            for block in self.blockage:
+                result += " "
+                result += str(block)
+            
         else:
-            result += "None and therefore whole range is yours!"
+            result += "<br>The range is yours!"
         return result
 
     def subtract_blockage(self):  # for range instance only

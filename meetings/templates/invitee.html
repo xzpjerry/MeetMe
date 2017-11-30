@@ -63,23 +63,34 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
+
+    var delay = (function(){
+      var timer = 0;
+      return function(callback, ms){
+        clearTimeout (timer)
+        timer = setTimeout(callback, ms)
+      }})()
+
     $("#user_id").keyup(function(event){
-      var txt = $("#user_id").val();  // Current content of the input field
-      if (txt.length === 0) { return } // Save reasources
 
-      var keycode = event.which;      // They key that just went up
-      var letter = String.fromCharCode(keycode);
-      if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
+      delay(function(){
+        var txt = $("#user_id").val();  // Current content of the input field
+        if (txt.length === 0) { return } // Save reasources
 
-      $.getJSON("/_updateUserName", {text: txt}, function(data){
-        rslt = data.result.result
-        if (rslt === true) {
-          $("#user_id").value = {{ g.userid }}
-        } else {
-          alert("This member has already provided his busy time period, please change another name.")
-        }
-      })
+        var keycode = event.which;      // They key that just went up
+        var letter = String.fromCharCode(keycode);
+        if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
 
+        $.getJSON("/_updateUserName", {text: txt}, function(data){
+          rslt = data.result.result
+          if (rslt === true) {
+            alert("Your name has been updated!")
+            $("#user_id").value = {{ g.userid }}
+          } else {
+            alert("This member has already provided his busy time period, please change another name.")
+          }
+        })
+      },2000)
     })
 
     $("input[name='cal_selected']").on('change', function(){
@@ -97,9 +108,9 @@
         url:'_updateSelectedCal',
         dataType:'json',
         data:JSON.stringify(result),
-        error: function(result) {console.log(result)}
+        error: function(result) {console.log(result)},
+        success: function(data) {alert("Change updated!")}
     }))
-    alert("Change updated!")
   })
   })
 </script>

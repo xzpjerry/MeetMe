@@ -225,11 +225,10 @@ def update_session_from_DB():
         flask.session["begin_time"] = start.format("HH:mm")
         flask.session["end_time"] = end.format("HH:mm")
 
-        tomorrow = start.replace(days=+1)
-        nextweek = start.replace(days=+7)
         flask.session["daterange"] = "{} - {}".format(
-            tomorrow.format("MM/DD/YYYY"),
-            nextweek.format("MM/DD/YYYY"))
+            start.format("MM/DD/YYYY"),
+            end.format("MM/DD/YYYY"))
+
     flask.g.begin_date = flask.session["begin_date"].split('T')[0]
     flask.g.begin_hour = flask.session["begin_time"].split(':')[0]
     flask.g.begin_minute = flask.session["begin_time"].split(':')[1]
@@ -369,7 +368,7 @@ def list_calendars(service):
              "selected": selected,
              "primary": primary
              })
-        #app.logger.info(str(result))
+        # app.logger.info(str(result))
     return sorted(result, key=cal_sort_key)
 
 
