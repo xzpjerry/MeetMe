@@ -1,8 +1,8 @@
-# proj8-Gcal
-Snarf appointment data from a selection of a user's Google calendars 
+# proj-MeetMe
+A meeting arranger. Getting busy time period from people and outputing common free time(s).
 
 ## What you need
-Google calendar api credentials json
+Google calendar api credentials json.
 
 ## Usage
 - Import your Google calendar api credentials json into /meetings
