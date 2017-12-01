@@ -207,7 +207,7 @@ def update_session_from_DB():
         flask.session["end_time"] = now.shift(hours=2).format("HH:mm")
 
         tomorrow = now.replace(days=+1)
-        nextweek = now.replace(days=+7)
+        nextweek = now.shift(hours=2).replace(days=+7)
         flask.session["begin_date"] = tomorrow.isoformat()
         flask.session["end_date"] = nextweek.isoformat()
         flask.session["daterange"] = "{} - {}".format(

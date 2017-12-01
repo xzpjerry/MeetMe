@@ -94,23 +94,26 @@
     })
 
     $("input[name='cal_selected']").on('change', function(){
-      var result = {}
-      $("input[name='cal_selected']").each(function(){
-        var myself = this
-        var checked = this.checked
-        var id = $(this).next('label').text()
-        result[id] = checked
-        console.log(result)
-      }).promise().done(
-      $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
-        url:'_updateSelectedCal',
-        dataType:'json',
-        data:JSON.stringify(result),
-        error: function(result) {console.log(result)},
-        success: function(data) {alert("Change updated!")}
-    }))
+
+      delay(function(){
+        var result = {}
+        $("input[name='cal_selected']").each(function(){
+          var myself = this
+          var checked = this.checked
+          var id = $(this).next('label').text()
+          result[id] = checked
+          console.log(result)
+        }).promise().done(
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json',
+          url:'_updateSelectedCal',
+          dataType:'json',
+          data:JSON.stringify(result),
+          error: function(result) {console.log(result)},
+          success: function(data) {alert("Change updated!")}
+      }))
+      }, 2000)
   })
   })
 </script>
